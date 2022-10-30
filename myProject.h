@@ -10,7 +10,7 @@
 #define _myProject_H_   //헤더를 정의할 것
 
 int printMyName1(void);   //1.c 코드 작성 후 주석제거
-//int printMyName2(void);   //2.c 코드 작성 후 주석제거
+int printMyName2(void);   //2.c 코드 작성 후 주석제거
 int printMyName3(void);   //3.c 코드 작성 후 주석제거
 
 #endif  //헤더 종료
