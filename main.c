@@ -11,8 +11,8 @@ int main(void)
 {
     printf("cheif name is [허무혁]\r\n");
     /*이 주석은 조원의 코드가 모두 push되면 해제 할것*/
-    //printMyName1();
-    //printMyName2();
-    //printMyName3();
+    printMyName1();
+    printMyName2();
+    printMyName3();
     return 1;
 }
