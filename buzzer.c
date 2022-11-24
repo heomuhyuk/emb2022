@@ -40,8 +40,13 @@ int buzzerInit(void)
 	}
 	printf("find %s\n",gBuzzerBaseSysDir);
 	char path[200];
-	sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
+	sprintf(path,"%s%s",gBuzzerBaseSysDir, BUZZER_ENABLE_NAME);
 	int fd=open(path,O_WRONLY);
+    if ( fd < 0 )
+    {
+        perror("driver (//dev//cnled) open error.\n");
+        return 1;
+    }
 	return ifNotFound;
 }
 
@@ -49,15 +54,8 @@ int buzzerPlaySong(int scale)
 {
 	char path[200];
 	sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
-	int fd=open(path,O_WRONLY);
-	if ( fd < 0 )
-    {
-        perror("driver (//dev//cnled) open error.\n");
-        return 1;
-    }
-    dprintf(fd, "%d", musicScale[scale-1]);
+    dprintf(fd, "%d", scale);
 	write(fd, &"1", 1);
-	close(fd);
 }
 
 int buzzerStopSong(void)
@@ -65,13 +63,7 @@ int buzzerStopSong(void)
 	char path[200];
 	sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
 	int fd=open(path,O_WRONLY);
-	if ( fd < 0 )
-    {
-        perror("driver (//dev//cnled) open error.\n");
-        return 1;
-    }
 	write(fd, &"0", 1);
-	close(fd);
 }
 
 int buzzerExit(void)
