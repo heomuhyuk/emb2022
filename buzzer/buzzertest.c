@@ -15,8 +15,7 @@ static const int musicScale[MAX_SCALE_STEP] =
 int main(void)
 {
     buzzerInit();
-    printf("buzzer turn on\n");
-    printf("do[1] = 262\nre[2] = 294\n,mi[3] = 330\n,pa[4] = 349\n,sol[5] = 392\n,ra[6] = 440\n,si[7] = 494\n");
+    printf("do : 1 ~ si : 7\n");
     buzzerPlaySong(musicScale[1]);
     printf("scale : %d\n", musicScale[1]);
     sleep(1);
