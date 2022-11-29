@@ -8,4 +8,8 @@ char DataNumeric[FND_DATA_BUFF_LEN]; //숫자 0-9
 char DataDot[FND_DATA_BUFF_LEN]; //숫자 0 or 1
 char DataValid[FND_DATA_BUFF_LEN]; //숫자 0 or 1
 }stFndWriteForm,*pStFndWriteForm;
+int fndDisp(int num , int dotflag);
+int fndOff(void);
+
+
 #endif// __FND_DRV_H__
