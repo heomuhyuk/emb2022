@@ -21,7 +21,7 @@
 
 #define PWM_PERIOD_NS 1000000 //ns. = 1ms = 1khz 
 
-//pwm Ã¤³Î È°¼ºÈ­
+//pwm ì±„ë„ í™œì„±í™”
 int pwmActiveAll(void)
 {
 int fd = 0;
@@ -34,11 +34,11 @@ close(fd);
 fd = open ( COLOR_LED_DEV_B_ PWM_EXPORT, O_WRONLY);
 write(fd,&"0",1);
 close(fd);
-//°¢ »ö»ó 0À» ¾²°í close
+//ê° ìƒ‰ìƒ 0ì„ ì“°ê³  close
 return 1;
 }
 
-//pwm Ã¤³Î ºñÈ°¼ºÈ­
+//pwm ì±„ë„ ë¹„í™œì„±í™”
 int pwmInactiveAll(void)
 {
 int fd = 0;
@@ -54,7 +54,7 @@ close(fd);
 return 1;
 }
 
-//pwm duty °ª ÁöÁ¤
+//pwm duty ê°’ ì§€ì •
 int pwmSetDuty(int dutyCycle, int pwmIndex)
 {
 int fd = 0;
@@ -76,7 +76,7 @@ close(fd);
 return 1;
 }
 
-//pwm period °ª ÁöÁ¤
+//pwm period ê°’ ì§€ì •
 int pwmSetPeriod(int Period, int pwmIndex)
 {
 int fd = 0;
@@ -99,7 +99,7 @@ close(fd);
 return 1;
 }
 
-//pwm %°ª ÁöÁ¤ 
+//pwm %ê°’ ì§€ì • 
 int pwmSetPercent(int percent, int ledColor)
 {
 if ((percent <0) || (percent > 100))
@@ -109,11 +109,11 @@ return 0;
 }
 int duty = (100- percent) * PWM_PERIOD_NS / 100;
 //LED Sinking.
-pwmSetDuty(duty, ledColor); //duty cycle ÀÌ¿ëÇØ »ö»ó Á¶Àı
+pwmSetDuty(duty, ledColor); //duty cycle ì´ìš©í•´ ìƒ‰ìƒ ì¡°ì ˆ
 return 0;
 }
 
-//pwm½ÃÀÛ
+//pwmì‹œì‘
 int pwmStartAll(void)
 {
 int fd = 0;
