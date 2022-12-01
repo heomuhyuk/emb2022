@@ -9,15 +9,11 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
-#include "Temperature.h"
+#include "temperature.h"
 
 int main(void){
-int a;
+spi_init();
 
-int spi_init(const char filename[40])
-char * spi_read_lm74(int file)
-
-a = int getTem(void);
-printf("current temp: %d", a);
-
+readtemp();
+return 0;
 }
