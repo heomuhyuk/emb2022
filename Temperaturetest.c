@@ -12,8 +12,7 @@
 #include "Temperature.h"
 
 int main(void){
-spi_init();
-
+	
 readtemp();
 return 0;
 }
