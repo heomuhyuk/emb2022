@@ -9,6 +9,7 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include "Temperature.h"
 
 char gbuf[10];
 
