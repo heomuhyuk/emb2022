@@ -6,8 +6,8 @@
 #include "colorled.h"
 
 int main(void)
-{//duty cycle을 통한 RGB 값 조절
-    pwmLedInit();
+{//using duty cycle to control RGB value 
+   pwmLedInit();
     printf("colorled init\n");
     pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
     pwmSetPercent(60, 1); //g
