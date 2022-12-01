@@ -1,8 +1,8 @@
-#ifndef _TEMPERATURE_H_
-#define _TEMPERATURE_H_
+#ifndef _TEMPERATURE_h_
+#define _TEMPERATURE_h_
 
-int spi_init(char filename[40]);
-char * spi_read_lm74(int file);
-int readtemp(void);
+int temp_init(void);
+double temp_read(void);
+int temp_exit(void);
 
 #endif

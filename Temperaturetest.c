@@ -1,18 +1,16 @@
-#include <stdint.h>
-#include <string.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/ioctl.h>
-#include <linux/types.h>
-#include <linux/spi/spidev.h>
+#include <unistd.h>
 #include "Temperature.h"
 
-int main(void){
+int main(void)
+{
+	double thermal; int cnt;
+	temp_init();
+
+	printf("Temperature is: %f\n", temp_read());
+    temp_exit();
+	printf("goodbye!\n");
 	
-readtemp();
-return 0;
+	return 0;
 }
