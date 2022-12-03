@@ -1,4 +1,4 @@
-\#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
@@ -378,13 +378,14 @@ int main(void){
     AllDeviceInit();
     bitmainfunc("test.bmp");
     //--------------
-    /*스레드 전용 변수*/
+    /*스레드 전용 변수
     int err;
     if (pthread_mutex_init(&lock, NULL) != 0)   //스레드 초기화
     {
         printf ("\n Mutex Init Failed!!\n");
         return 1;
     }
+*/
     /*버튼 전용 변수*/
 	struct input_event stEvent;
 	BUTTON_MSG_T msgRx;
@@ -432,4 +433,5 @@ int main(void){
     AllDeviceClose();
     return 0;
 }
+
 
