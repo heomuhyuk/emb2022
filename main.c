@@ -39,16 +39,64 @@ void* Do_Thread_1(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    writeLCD(1, "thread 1");
-    ledOnOff(1,1);
-    ledOnOff(0,0);
-    temp_read();
-    accelRead();
-    magRead();
-    gyroRead();
-    pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
-    sleep(1);
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "home");
+        ledOnOff(1,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key):");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -63,8 +111,65 @@ void* Do_Thread_2(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 2 구현부*/
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "one more");
+        writeLCD(2, "press back");
+        ledOnOff(2,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key):");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -79,8 +184,64 @@ void* Do_Thread_3(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 3 구현부*/
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "search");
+        ledOnOff(1,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key):");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -95,8 +256,64 @@ void* Do_Thread_4(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 4 구현부*/
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "menu");
+        ledOnOff(1,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key):");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -111,8 +328,64 @@ void* Do_Thread_5(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 5 구현부*/
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "vol up");
+        ledOnOff(1,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key :");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -120,15 +393,71 @@ void* Do_Thread_5(void *arg)
 }
 /*---------------------------------------*/
 
-/*-------------스레드 6 vol up ---------------*/
+/*-------------스레드 6 vol down ---------------*/
 void* Do_Thread_6(void *arg)
 {
     #if MUTEX_ENABLE //  mutex을 사용했을 경우
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 6 구현부*/
+        /*버튼 전용 변수*/
+	struct input_event stEvent;
+	BUTTON_MSG_T msgRx;
+	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+    /*------------*/
+    /*무한루프*/
+    while(1)
+    {
+        writeLCD(1, "          ");
+        writeLCD(2, "          ");
+        writeLCD(1, "vol down");
+        ledOnOff(1,1);
+        /*
+        temp_read();
+        accelRead();
+        magRead();
+        gyroRead();
+        pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+        sleep(1);
+        */
 
+        int returnValue = 0 ;
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		switch(msgRx.keyInput)
+		{
+            /*각 키가 눌렸을 때 행동 지정.*/
+			case KEY_VOLUMEUP: 
+
+            break; 
+			case KEY_HOME: 
+                printf("Home key : ");
+
+            break;
+			case KEY_SEARCH:
+                printf("Search key : ");                    
+
+            break;
+			case KEY_BACK:
+                printf("Back key : ");                                     
+                /*스레드 종료*/
+                writeLCD(1, "          ");
+                writeLCD(2, "          ");
+                pthread_mutex_unlock(&lock);
+                ledOnOff(1,0);
+                return NULL;
+
+            break;
+			case KEY_MENU: 
+                printf("Menu key : ");                     
+
+            break;
+			case KEY_VOLUMEDOWN:
+                printf("Volume down key):");
+
+            break;
+		}
+    }
+    ledOnOff(1,0);
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
     #endif
@@ -243,9 +572,10 @@ int main(void){
 	BUTTON_MSG_T msgRx;
 	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
     /*------------*/
-    /*메인 스레드*/
+    /*무한루프*/
     while(1)
-	{
+	{   
+        writeLCD(1, "HELLO");
 		int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
 			switch(msgRx.keyInput)
@@ -253,12 +583,12 @@ int main(void){
                 /*각 키가 눌렸을 때 행동 지정.*/
 				case KEY_VOLUMEUP: 
                     printf("Volume up key : "); 
-                    err = pthread_create(&(tid[0]), NULL, &Do_Thread_1, NULL);  //스레드 1
+                    err = pthread_create(&(tid[0]), NULL, &Do_Thread_5, NULL);  //스레드 1
                     if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break; 
 				case KEY_HOME: 
                     printf("Home key : ");
-                    err = pthread_create(&(tid[1]), NULL, &Do_Thread_2, NULL);  //스레드 2
+                    err = pthread_create(&(tid[1]), NULL, &Do_Thread_1, NULL);  //스레드 2
                     if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				    case KEY_SEARCH:
@@ -268,12 +598,12 @@ int main(void){
                 break;
 				case KEY_BACK:
                     printf("Back key : ");                     
-                    err = pthread_create(&(tid[3]), NULL, &Do_Thread_4, NULL);  //스레드 4
+                    err = pthread_create(&(tid[3]), NULL, &Do_Thread_2, NULL);  //스레드 4
                     if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				case KEY_MENU: 
                     printf("Menu key : ");                     
-                    err = pthread_create(&(tid[4]), NULL, &Do_Thread_5, NULL);  //스레드 5
+                    err = pthread_create(&(tid[4]), NULL, &Do_Thread_4, NULL);  //스레드 5
                     if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				case KEY_VOLUMEDOWN:
