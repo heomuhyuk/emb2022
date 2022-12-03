@@ -22,6 +22,8 @@
 #include "fnd.h"
 #include "led.h"
 #include "textlcd.h"
+// first read input device
+#define INPUT_DEVICE_LIST "/dev/input/event4"
 
 /*---------------스레드----------------*/
 #define MUTEX_ENABLE 0
@@ -37,7 +39,15 @@ void* Do_Thread_1(void *arg)
         pthread_mutex_lock(&lock); // lock으로 다른 스레드의 동시 수행 차단
     #endif
 
-    /*스레드 1 구현부*/
+    writeLCD(1, "thread 1");
+    ledOnOff(1,1);
+    ledOnOff(0,0);
+    temp_read();
+    accelRead();
+    magRead();
+    gyroRead();
+    pwmSetPercent(30, 0); //r    ( duty = (100- percent) )
+    sleep(1);
 
     #if MUTEX_ENABLE
         pthread_mutex_unlock(&lock); // 다른 스레드가 수행할수 있도록 lock 해제
@@ -195,9 +205,9 @@ void AllDeviceInit()
 {
     ledLibInit();
     temp_init();
-    accelInit()
-    magInit()
-    gyroInit()
+    accelInit();
+    magInit();
+    gyroInit();
     buttonLibInit();
     buzzerInit();
     pwmLedInit();
@@ -211,7 +221,7 @@ void AllDeviceClose()
     buttonLibExit();
     buzzerExit();
     pwmInactiveAll();
-    fndOff(void);
+    fndOff();
     textLCD_off();
 }
 
@@ -219,12 +229,13 @@ void AllDeviceClose()
 int main(void){
     /*스타트*/
     AllDeviceInit();
+    bitmainfunc("test.bmp");
     //--------------
     /*스레드 전용 변수*/
     int err;
     if (pthread_mutex_init(&lock, NULL) != 0)   //스레드 초기화
     {
-        printf (“\n Mutex Init Failed!!\n”);
+        printf ("\n Mutex Init Failed!!\n");
         return 1;
     }
     /*버튼 전용 변수*/
@@ -242,33 +253,33 @@ int main(void){
                 /*각 키가 눌렸을 때 행동 지정.*/
 				case KEY_VOLUMEUP: 
                     printf("Volume up key : "); 
-                    err = pthread_create(&(tid[0]), NULL, &doSomeThing, NULL);  //스레드 1
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[0]), NULL, &Do_Thread_1, NULL);  //스레드 1
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break; 
 				case KEY_HOME: 
                     printf("Home key : ");
-                    err = pthread_create(&(tid[1]), NULL, &doSomeThing, NULL);  //스레드 2
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[1]), NULL, &Do_Thread_2, NULL);  //스레드 2
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				    case KEY_SEARCH:
                     printf("Search key : ");                    
-                    err = pthread_create(&(tid[2]), NULL, &doSomeThing, NULL);  //스레드 3
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[2]), NULL, &Do_Thread_3, NULL);  //스레드 3
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				case KEY_BACK:
                     printf("Back key : ");                     
-                    err = pthread_create(&(tid[3]), NULL, &doSomeThing, NULL);  //스레드 4
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[3]), NULL, &Do_Thread_4, NULL);  //스레드 4
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				case KEY_MENU: 
                     printf("Menu key : ");                     
-                    err = pthread_create(&(tid[4]), NULL, &doSomeThing, NULL);  //스레드 5
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[4]), NULL, &Do_Thread_5, NULL);  //스레드 5
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 				case KEY_VOLUMEDOWN:
                     printf("Volume down key):");
-                    err = pthread_create(&(tid[5]), NULL, &doSomeThing, NULL);  //스레드 6
-                    if (err != 0) printf (“Thread Create Error: [%d]\n”, err);
+                    err = pthread_create(&(tid[5]), NULL, &Do_Thread_6, NULL);  //스레드 6
+                    if (err != 0) printf ("Thread Create Error: [%d]\n", err);
                 break;
 			}
 	}
@@ -276,5 +287,5 @@ int main(void){
 
     /*종료료*/
     AllDeviceClose();
-    return 0
+    return 0;
 }
