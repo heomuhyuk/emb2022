@@ -37,16 +37,15 @@ int main(void){
 	}
 
 
-	if(gyroInit() != 0)
+	if(accelInit() != 0)
 	{
 		printf("Accelerometer Init failed!\n");
 		exit(-1);
 	}
 
-
 	while(1){
 
-	data = gyroRead();
+	data = accelRead();
 	
 	
 ////	count++;// 한 번 보낼 때마다 카운트 1증가
@@ -55,10 +54,10 @@ int main(void){
 	char msg_in[200];//입력 메세지 저장할 공간
 	
 
-	msg_in[200]=data[2];//data[2]가 z축이라고 가정
+	msg_in[200]=data[0];//data[2]가 z축이라고 가정
 	sprintf((char*) shmemAddr, "%s", msg_in);//shmemAddr에 msg_in 저장
 	
-	if(data[2]<0){  //if 조건부는 z값 확인 후 변경( z축 -9.8xxxxx ?? )
+	if(data[0]<0){  //if 조건부는 z값 확인 후 변경( z축 -9.8xxxxx ?? )
  	buzzerPlaySong(musicScale[1]);
     snprintf(messageTxData.piggyBlack, sizeof(messageTxData.piggyBlack)-1,"car is overturned [%d]",data[2] );
 	//messageTxData.piggyBlack에 hello....저장된 메세지
