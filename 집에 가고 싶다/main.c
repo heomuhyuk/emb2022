@@ -146,6 +146,7 @@ void BT_SEARCH(void)
     /*무한루프*/
     while(1)
     {
+         bitmainfunc("main.bmp");
 		writeLCD(1, "                  ");
         writeLCD(2, "                  ");
         writeLCD(1, "search menu");
@@ -202,22 +203,21 @@ void BT_MENU(void)
         writeLCD(2, "                  ");
         writeLCD(1, "game play");
         writeLCD(2, "volup button");
-
+        usleep(50000);
         fndDisp(score , 0);
-        usleep(1000);
-        select = rand()%100;
+        select = rand()%10;
         printf("%d", select);
         if(game_start == 1){
-        if(select == 5)
+        if(select < 5)
             bitmainfunc("hit.bmp");
-        else if(select == 10)
+        else if(select == 8)
             bitmainfunc("miss.bmp");
         else 
-            bitmainfunc("game_defualt.bmp");
+            bitmainfunc("game_default.bmp");
         }
 
         int returnValue = 0 ;
-		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,IPC_NOWAIT);
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 , IPC_NOWAIT);
 
 		switch(msgRx.keyInput)
 		{
@@ -229,7 +229,7 @@ void BT_MENU(void)
                     writeLCD(2, "                  ");
                     writeLCD(1, "hit");
                     writeLCD(2, "press home_key");
-                score = 0;
+                score = 200;
             break; 
 			case KEY_HOME: 
                 printf("Home key : hit");
@@ -238,9 +238,9 @@ void BT_MENU(void)
                 writeLCD(1, "playing");
                 writeLCD(2, "stop voldown");
                 if(game_start == 1){
-                    if(select == 5) score = score + 10;
-                    else score = score - 10;
-                }
+                    if(select < 5)score = score + 10;
+                    else if score = 0;                
+                    }
             break;
 			case KEY_SEARCH:
                 printf("Search key : ");                    
@@ -513,6 +513,7 @@ int main(void){
     /*무한루프*/
     while(1)
 	{  
+        bitmainfunc("main.bmp");
 		int returnValue = 0;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
 			switch(msgRx.keyInput)
