@@ -34,6 +34,6 @@ int main(void){
 		
 		//if(returnValue){ //메세지 올때까지 기다리면서 메세지 받음
 		//if(returnValue==-1)break;//받은게 없으면 멈춤
-		printf("%s\r\n", messageRxData.piggyBlack);//쌓인 메세지 갯수출력
+		printf("%s\r\n", messageRxData.piggyBlack);//쌓인 메세지 갯수출력 //car is overturned [z값]출력
 	//}
 }
