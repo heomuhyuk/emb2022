@@ -32,103 +32,147 @@ void BT_HOME(void)
 	struct input_event stEvent;
 	BUTTON_MSG_T msgRx;
 	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+	int status = 0;
     /*------------*/ 
-    
-      double thermal;
-    int cnt;
-	temp_init();
-	
-    printf("Temperature is: %f\n", temp_read());
-    thermal = temp_read();
-    writeLCD(1, "temperture");
-    writeLCD(2, "");
-    fndDisp(thermal , 0b00000);
-	printf("goodbye!\n");
-    
-    
+    writeLCD(1, "home");
     /*무한루프*/
     while(1)
     {
-        writeLCD(1, "home");
+    double thermal;
+    int cnt;
+    int mode ;
+int number, num_date;
+
+struct tm *ptmcur;
+struct tm* date;
+time_t tTime, base;
+if ( -1 == time(&tTime) )
+return -1; 
+
+if ( -1 == time(&base) )
+return -1; 
+
         int returnValue = 0 ;
-		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
-        writeLCD(1, "home");
-
-
-
-
-
-
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,IPC_NOWAIT);
 
 		switch(msgRx.keyInput)
 		{
             /*각 키가 눌렸을 때 행동 지정.*/
 			case KEY_VOLUMEUP: 
-                printf("volume key : ");
+                //printf("volume key : ");
+
+	temp_init();
+	
+    thermal = temp_read();
+    if (status != 1){
+		status = 1;
+		writeLCD(1, "                           ");
+    writeLCD(2, "                           ");
+		writeLCD(1, "temperature");
+          printf("temperature : %f\n", temp_read());
+	}
+    
+
+    fndDisp(thermal , 0b00000);
             break; 
 			case KEY_HOME: 
                 printf("Home key : ");
+                return NULL;    //빠져나감.
             break;
 			case KEY_SEARCH:
-                printf("Search key : ");                    
+ //               printf("Search key : ");          
+ date = localtime(&base);    
+
+ num_date = (date->tm_year -100) * 10000;
+ num_date += (date->tm_mon + 1) * 100; 
+ num_date += date->tm_mday;
+   if (status != 3){
+		status = 3;
+		writeLCD(1, "                           ");
+    writeLCD(2, "                           ");
+		writeLCD(1, "date");
+        printf("date : %d \n" , num_date);
+	}
+    fndDisp(num_date , 0b1010);
+
+
             break;
 			case KEY_BACK:
                 printf("Back key : ");                                     
                 return NULL;    //빠져나감.
             break;
 			case KEY_MENU: 
-                printf("Menu key : ");                     
-            break;
+                printf("Menu key : ");       
+                printf("Menu key : ");        
+                printf("Menu key : ");        
+                 
 			case KEY_VOLUMEDOWN:
-                printf("Volume down key :");
-            break;
+             //   printf("Volume down key :");
+ptmcur = localtime(&tTime);
+
+number = ptmcur->tm_hour * 10000;
+number += ptmcur->tm_min *100;
+number += ptmcur->tm_sec;
+  if (status != 2){
+		status = 2;
+		writeLCD(1, "                           ");
+    writeLCD(2, "                           ");
+		writeLCD(1, "time");
+        printf("time : %d \n" , number);
+	}
+fndDisp(number , 0b1010);
+
+break;
 		}
+	usleep(50000);	
     }
     return NULL;
 }
 /*---------------------------------------*/
 
 /*------------ 버튼 BACK ---------------*/
-void BT_BACK(void)
-{
-        /*버튼 전용 변수*/
-	struct input_event stEvent;
-	BUTTON_MSG_T msgRx;
-	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
-    /*------------*/
-    /*무한루프*/
-    while(1)
-    {
-        writeLCD(1, "BACK");
-        int returnValue = 0 ;
-		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
 
-		switch(msgRx.keyInput)
-		{
-            /*각 키가 눌렸을 때 행동 지정.*/
-			case KEY_VOLUMEUP: 
-                printf("volume key : ");
-            break; 
-			case KEY_HOME: 
-                printf("Home key : ");
-            break;
-			case KEY_SEARCH:
-                printf("Search key : ");                    
-            break;
-			case KEY_BACK:
-                printf("Back key : ");                                     
-                return NULL;    //빠져나감.
-            break;
-			case KEY_MENU: 
-                printf("Menu key : ");                     
-            break;
-			case KEY_VOLUMEDOWN:
-                printf("Volume down key :");
-            break;
-		}
-    }
-    return NULL;
-}
+//void BT_BACK(void)
+//{
+//        /*버튼 전용 변수*/
+//	struct input_event stEvent;
+//	BUTTON_MSG_T msgRx;
+//	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
+//    /*------------*/
+//    /*무한루프*/
+//    while(1)
+//    {
+//        writeLCD(1, "BACK");
+//        int returnValue = 0 ;
+//		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+//
+//		switch(msgRx.keyInput)
+//		{
+//           /*각 키가 눌렸을 때 행동 지정.*/
+//			case KEY_VOLUMEUP: 
+//               printf("volume key : ");
+//            break; 
+//			case KEY_HOME: 
+//                printf("Home key : ");
+//            break;
+//			case KEY_SEARCH:
+//                printf("Search key : ");                    
+//            break;
+//			case KEY_BACK:
+//                printf("Back key : ");                                     
+//                return NULL;    //빠져나감.
+//            break;
+//			case KEY_MENU: 
+//                printf("Menu key : ");                     
+//            break;
+//			case KEY_VOLUMEDOWN:
+//                printf("Volume down key :");
+//            break;
+//		}
+//    }
+//    return NULL;
+//}
+
 /*---------------------------------------*/
 
 /*------------ 버튼 SEARCH ---------------*/
@@ -434,7 +478,7 @@ int main(void){
                 break;
 				case KEY_BACK:
                     printf("Back key : ");
-                    BT_BACK();
+//                    BT_BACK();
                 break;
 				case KEY_MENU: 
                     printf("Menu key : ");
