@@ -4,6 +4,7 @@
 #include<sys/shm.h>
 #include"myMessage.h"
 ///////////////////////////////////////////////////////////////////////////////
+int *data;
 
 #define MAX_SCALE_STEP 8
 static const int musicScale[MAX_SCALE_STEP] =
@@ -42,27 +43,26 @@ int main(void){
 		exit(-1);
 	}
 
-int *data;
-
-
 	while(1){
 
 	data = accelRead();
-	printf("Accel data is: %d\n",data[0]);
-    sleep(1000);
+	printf("Accel data is: %d\r\n",data[0]);
 	
 ////	count++;// 한 번 보낼 때마다 카운트 1증가
 ////	printf("write message: ");//출력
 ////	scanf("%s", &msg_in);//키보드 입력을 msg_in에 저장	
 	char msg_in[200];//입력 메세지 저장할 공간
-	msg_in[200]=data[0];//data[0]가 z축이라고 가정
+	
+
 	
 	
-	if(data[0]<100){  //if 조건부는 z값 확인 후 변경( z축 -9.8xxxxx ?? )
-    
+	
+	if(((int)(data[0]))<0){  //if 조건부는 z값 확인 후 변경( z축 -9.8xxxxx ?? )
+
+    msg_in[200]=data[0];//data[0]가 z축이라고 가정
     sprintf((char*) shmemAddr, "%s", msg_in);//shmemAddr에 msg_in 저장 	
     buzzerPlaySong(musicScale[1]);
-    snprintf(messageTxData.piggyBlack, sizeof(messageTxData.piggyBlack)-1,"car is overturned [%d]",data[0] );
+    snprintf(messageTxData.piggyBlack, sizeof(messageTxData.piggyBlack)-1,"car is overturned [%d]",data[0]);
 	//messageTxData.piggyBlack에 hello....저장된 메세지
 	messageTxData.messageType=1;//1is good enough
 	////printf("\tsending %d message\r\n",count);// 메세지 보냄 표시(표준출력에 출력)
@@ -70,3 +70,4 @@ int *data;
 	}
     }
 }
+
