@@ -34,7 +34,10 @@ void BT_HOME(void)
 	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
 	int status = 0;
     /*------------*/ 
+    writeLCD(1, "                  ");
+    writeLCD(2, "                  ");
     writeLCD(1, "home");
+    fndDisp(0 , 0b0000);
     /*무한루프*/
     while(1)
     {
@@ -66,18 +69,16 @@ return -1;
     thermal = temp_read();
     if (status != 1){
 		status = 1;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "temperature");
           printf("temperature : %f\n", temp_read());
 	}
-    
-
     fndDisp(thermal , 0b00000);
             break; 
 			case KEY_HOME: 
                 printf("Home key : ");
-                return NULL;    //빠져나감.
+                BT_HOME();
             break;
 			case KEY_SEARCH:
  //               printf("Search key : ");          
@@ -88,7 +89,7 @@ return -1;
  num_date += date->tm_mday;
    if (status != 3){
 		status = 3;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "date");
         printf("date : %d \n" , num_date);
@@ -97,15 +98,17 @@ return -1;
 
 
             break;
+            
 			case KEY_BACK:
                 printf("Back key : ");                                     
                 return NULL;    //빠져나감.
             break;
+            
 			case KEY_MENU: 
-                printf("Menu key : ");       
-                printf("Menu key : ");        
-                printf("Menu key : ");        
-                 
+                printf("Search Menu \n");    
+                BT_SEARCH();         
+                break;
+                
 			case KEY_VOLUMEDOWN:
              //   printf("Volume down key :");
 ptmcur = localtime(&tTime);
@@ -115,7 +118,7 @@ number += ptmcur->tm_min *100;
 number += ptmcur->tm_sec;
   if (status != 2){
 		status = 2;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "time");
         printf("time : %d \n" , number);
@@ -186,7 +189,9 @@ void BT_SEARCH(void)
     /*무한루프*/
     while(1)
     {
-        writeLCD(1, "search");
+		writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
+        writeLCD(1, "search menu");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
 
@@ -195,8 +200,10 @@ void BT_SEARCH(void)
             /*각 키가 눌렸을 때 행동 지정.*/
 			case KEY_VOLUMEUP: 
                 printf("volume key : ");
+                BT_VOL_UP();
             break; 
 			case KEY_HOME: 
+			BT_HOME();
                 printf("Home key : ");
             break;
 			case KEY_SEARCH:
@@ -207,10 +214,12 @@ void BT_SEARCH(void)
                 return NULL;    //빠져나감.
             break;
 			case KEY_MENU: 
-                printf("Menu key : ");                     
+                printf("Menu key : ");
+                BT_MENU();                     
             break;
 			case KEY_VOLUMEDOWN:
                 printf("Volume down key :");
+                BT_VOL_DOWN();
             break;
 		}
     }
@@ -227,20 +236,52 @@ void BT_MENU(void)
 	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
     /*------------*/
     /*무한루프*/
+
+    int select, game_start, score;
     while(1)
     {
-        writeLCD(1, "menu");
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
+        writeLCD(1, "game play");
+        writeLCD(2, "volup button");
+
+        fndDisp(score , 0);
+        select = rand()%100;
+        if(game_start == 1){
+        if(select == 5)
+            bitmainfunc("hit.bmp");
+        else if(select == 10)
+            bitmainfunc("miss.bmp");
+        else 
+            bitmainfunc("game_defualt.bmp");
+        }
+        else bitmainfunc("game_main.bmp");
+
         int returnValue = 0 ;
-		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
+		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,IPC_NOWAIT);
 
 		switch(msgRx.keyInput)
 		{
             /*각 키가 눌렸을 때 행동 지정.*/
 			case KEY_VOLUMEUP: 
-                printf("volume key : ");
+                printf("volume key : game start");
+                game_start = 1;
+                    writeLCD(1, "                  ");
+                    writeLCD(2, "                  ");
+                    writeLCD(1, "hit");
+                    writeLCD(2, "press home_key");
+                score = 0;
             break; 
 			case KEY_HOME: 
-                printf("Home key : ");
+                printf("Home key : hit");
+                writeLCD(1, "                  ");
+                writeLCD(2, "                  ");
+                writeLCD(1, "playing");
+                writeLCD(2, "stop voldown");
+                if(game_start == 1){
+                    if(select == 5) score = score + 10;
+                    else score = score - 10;
+                }
             break;
 			case KEY_SEARCH:
                 printf("Search key : ");                    
@@ -253,7 +294,13 @@ void BT_MENU(void)
                 printf("Menu key : ");                     
             break;
 			case KEY_VOLUMEDOWN:
-                printf("Volume down key :");
+                printf("Volume down key : game stop");
+                writeLCD(1, "                  ");
+                writeLCD(2, "                  ");
+                writeLCD(1, "return home");
+                writeLCD(2, "press back");
+                game_start = 0;
+                score = 0;
             break;
 		}
     }
@@ -272,31 +319,48 @@ void BT_VOL_UP(void)
     /*무한루프*/
     while(1)
     {
-        writeLCD(1, "volup");
-        int returnValue = 0;
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
+        writeLCD(1, "music play");
+        writeLCD(2, "press bt_munu");
+        int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
-
+        int a;
+        pid_t pid;
 		switch(msgRx.keyInput)
 		{
             /*각 키가 눌렸을 때 행동 지정.*/
 			case KEY_VOLUMEUP: 
-                printf("volume key : ");
+                printf("");
             break; 
 			case KEY_HOME: 
-                printf("Home key : ");
+                system("killall -9 vlc");
+                BT_HOME();
             break;
 			case KEY_SEARCH:
-                printf("Search key : ");                    
+                printf("");                  
             break;
 			case KEY_BACK:
                 printf("Back key : ");                                     
                 return NULL;    //빠져나감.
             break;
 			case KEY_MENU: 
-                printf("Menu key : ");                     
+                writeLCD(1, "                  ");
+                writeLCD(2, "                  ");
+                writeLCD(1, "volup");
+                writeLCD(2, "music");
+                
+                pid = fork();
+                if(pid>0){
+                    printf("play music");
+                }   //parent
+                if(pid == 0){
+                    system("vlc sample.mp3");
+                }
+                              
             break;
 			case KEY_VOLUMEDOWN:
-                printf("Volume down key :");
+                printf("");
             break;
 		}
     }
@@ -315,6 +379,8 @@ void BT_VOL_DOWN(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "vol_down");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -327,6 +393,7 @@ void BT_VOL_DOWN(void)
             break; 
 			case KEY_HOME: 
                 printf("Home key : ");
+                BT_HOME();
             break;
 			case KEY_SEARCH:
                 printf("Search key : ");                    
