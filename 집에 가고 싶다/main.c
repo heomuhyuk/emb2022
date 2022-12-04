@@ -56,6 +56,16 @@ return -1;
 if ( -1 == time(&base) )
 return -1; 
 
+/////
+int *data;
+data = accelRead();
+if(data[0]>100){
+buzzerPlaySong(musicScale[1]);
+sleep(1);
+}
+printf("%d",data[0]);
+
+
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,IPC_NOWAIT);
 
