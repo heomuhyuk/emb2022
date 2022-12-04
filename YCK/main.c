@@ -34,7 +34,10 @@ void BT_HOME(void)
 	int msgID = msgget ((key_t)MESSAGE_ID, IPC_CREAT|0666);
 	int status = 0;
     /*------------*/ 
+    writeLCD(1, "                  ");
+    writeLCD(2, "                  ");
     writeLCD(1, "home");
+    fndDisp(0 , 0b0000);
     /*무한루프*/
     while(1)
     {
@@ -66,18 +69,16 @@ return -1;
     thermal = temp_read();
     if (status != 1){
 		status = 1;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "temperature");
           printf("temperature : %f\n", temp_read());
 	}
-    
-
     fndDisp(thermal , 0b00000);
             break; 
 			case KEY_HOME: 
                 printf("Home key : ");
-                return NULL;    //빠져나감.
+                BT_HOME();
             break;
 			case KEY_SEARCH:
  //               printf("Search key : ");          
@@ -88,7 +89,7 @@ return -1;
  num_date += date->tm_mday;
    if (status != 3){
 		status = 3;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "date");
         printf("date : %d \n" , num_date);
@@ -97,15 +98,16 @@ return -1;
 
 
             break;
+            
 			case KEY_BACK:
                 printf("Back key : ");                                     
                 return NULL;    //빠져나감.
             break;
+            
 			case KEY_MENU: 
-                printf("Menu key : ");       
-                printf("Menu key : ");        
-                printf("Menu key : ");        
-                 
+                printf("Menu key : ");             
+                break;
+                
 			case KEY_VOLUMEDOWN:
              //   printf("Volume down key :");
 ptmcur = localtime(&tTime);
@@ -115,7 +117,7 @@ number += ptmcur->tm_min *100;
 number += ptmcur->tm_sec;
   if (status != 2){
 		status = 2;
-		writeLCD(1, "                           ");
+	writeLCD(1, "                           ");
     writeLCD(2, "                           ");
 		writeLCD(1, "time");
         printf("time : %d \n" , number);
@@ -197,6 +199,7 @@ void BT_SEARCH(void)
                 printf("volume key : ");
             break; 
 			case KEY_HOME: 
+			BT_HOME();
                 printf("Home key : ");
             break;
 			case KEY_SEARCH:
@@ -240,6 +243,7 @@ void BT_MENU(void)
                 printf("volume key : ");
             break; 
 			case KEY_HOME: 
+			BT_HOME();
                 printf("Home key : ");
             break;
 			case KEY_SEARCH:
@@ -283,6 +287,7 @@ void BT_VOL_UP(void)
                 printf("volume key : ");
             break; 
 			case KEY_HOME: 
+			BT_HOME();
                 printf("Home key : ");
             break;
 			case KEY_SEARCH:
@@ -326,6 +331,7 @@ void BT_VOL_DOWN(void)
                 printf("volume key : ");
             break; 
 			case KEY_HOME: 
+			BT_HOME();
                 printf("Home key : ");
             break;
 			case KEY_SEARCH:
