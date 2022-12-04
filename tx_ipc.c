@@ -56,7 +56,7 @@ int main(void){
 
 	
 	
-	int check = data[0]
+	int check = data[0];
 	if(check<0){  //if 조건부는 z값 확인 후 변경( z축 -9.8xxxxx ?? )
 
     msg_in[200]=data[0];//data[0]가 z축이라고 가정
