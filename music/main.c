@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <ctype.h>
@@ -36,6 +37,8 @@ void BT_HOME(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "home");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -79,6 +82,8 @@ void BT_BACK(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "BACK");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -122,6 +127,8 @@ void BT_SEARCH(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "search");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -165,6 +172,8 @@ void BT_MENU(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "menu");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -208,31 +217,44 @@ void BT_VOL_UP(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "volup");
+        writeLCD(2, "music");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
-
+        int a;
+        pid_t pid;
 		switch(msgRx.keyInput)
 		{
             /*각 키가 눌렸을 때 행동 지정.*/
 			case KEY_VOLUMEUP: 
-                printf("volume key : ");
+                printf("");
             break; 
 			case KEY_HOME: 
-                printf("Home key : ");
+                printf("");
             break;
 			case KEY_SEARCH:
-                printf("Search key : ");                    
+                printf("");                  
             break;
 			case KEY_BACK:
                 printf("Back key : ");                                     
                 return NULL;    //빠져나감.
             break;
 			case KEY_MENU: 
-                printf("Menu key : ");                     
+                
+                pid = fork();
+                if(pid>0){
+                    printf("play music");
+                }   //parent
+                if(pid == 0){
+                    system("vlc sample.mp3");  
+                }
+                              
             break;
 			case KEY_VOLUMEDOWN:
-                printf("Volume down key :");
+                printf("");
+                system("");
             break;
 		}
     }
@@ -251,6 +273,8 @@ void BT_VOL_DOWN(void)
     /*무한루프*/
     while(1)
     {
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "vol_down");
         int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
@@ -350,6 +374,10 @@ void BT_VOL_DOWN(void)
 
 void AllDeviceInit()
 {
+    system("insmod buttondrv.ko");
+    system("insmod buzzerdrv.ko");
+    system("insmod leddrv.ko");
+    system("insmod textlcddrv.ko");
     ledLibInit();
     temp_init();
     accelInit();
@@ -394,6 +422,8 @@ int main(void){
     /*무한루프*/
     while(1)
 	{   
+        writeLCD(1, "                  ");
+        writeLCD(2, "                  ");
         writeLCD(1, "HELLO");
 		int returnValue = 0 ;
 		returnValue = msgrcv(msgID, &msgRx, sizeof(int), 0 ,0);
